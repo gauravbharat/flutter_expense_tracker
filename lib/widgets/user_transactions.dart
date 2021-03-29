@@ -8,12 +8,24 @@ class UserTransactions extends StatelessWidget {
 
   UserTransactions({@required this.userTransactions});
 
+  List<Transaction> get _recentTransactions {
+    return userTransactions
+        .where(
+          (tx) => tx.date.isAfter(
+            DateTime.now().subtract(Duration(days: 7)),
+          ),
+        )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TransactionsChart(),
+        TransactionsChart(
+          recentTransactions: _recentTransactions,
+        ),
         TransactionList(
           userTransactions: userTransactions,
         ),

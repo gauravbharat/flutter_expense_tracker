@@ -47,6 +47,7 @@ class _NewTransactionState extends State<NewTransaction> {
             children: [
               TextField(
                 controller: titleController,
+                maxLength: 25,
                 decoration: InputDecoration(
                   labelText: 'Title',
                 ),
