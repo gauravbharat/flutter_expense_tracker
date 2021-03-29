@@ -5,8 +5,12 @@ import 'package:expense_tracker/widgets/transactions_chart.dart';
 
 class UserTransactions extends StatelessWidget {
   final List<Transaction> userTransactions;
+  final Function deleteTransactionHandler;
 
-  UserTransactions({@required this.userTransactions});
+  UserTransactions({
+    @required this.userTransactions,
+    @required this.deleteTransactionHandler,
+  });
 
   List<Transaction> get _recentTransactions {
     return userTransactions
@@ -27,8 +31,8 @@ class UserTransactions extends StatelessWidget {
           recentTransactions: _recentTransactions,
         ),
         TransactionList(
-          userTransactions: userTransactions,
-        ),
+            userTransactions: userTransactions,
+            deleteTransactionHandler: deleteTransactionHandler),
       ],
     );
   }
