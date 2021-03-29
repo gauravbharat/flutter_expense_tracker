@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Transaction {
   String id;
   String title;
@@ -7,9 +5,24 @@ class Transaction {
   DateTime date;
 
   Transaction({
-    @required this.id,
-    @required this.title,
-    @required this.amount,
-    @required this.date,
+    this.id,
+    this.title,
+    this.amount,
+    this.date,
   });
+
+  Transaction.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        title = json['title'],
+        amount = json['amount'],
+        date = DateTime.parse(json['date']);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'title': this.title,
+      'amount': this.amount,
+      'date': this.date.toString()
+    };
+  }
 }
