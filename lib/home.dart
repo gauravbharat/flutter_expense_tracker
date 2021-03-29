@@ -1,3 +1,4 @@
+import 'package:expense_tracker/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:collection';
 import 'dart:convert';
@@ -8,12 +9,15 @@ import 'package:expense_tracker/widgets/new_transaction.dart';
 import 'package:expense_tracker/widgets/user_transactions.dart';
 
 class MyHomePage extends StatefulWidget {
+  final Function darkModeHandler;
+
+  MyHomePage({@required this.darkModeHandler});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ksharedPrefsStoreKey = 'storedTransactions';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final List<Transaction> _userTransactions = [];
 
@@ -25,25 +29,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _loadStoredTransactions() async {
     final SharedPreferences prefs = await _prefs;
-    if (prefs.containsKey(ksharedPrefsStoreKey)) {
+    if (prefs.containsKey(kSharedPrefsStoreKey)) {
       final storedTransactions =
-          json.decode(prefs.getString(ksharedPrefsStoreKey));
+          json.decode(prefs.getString(kSharedPrefsStoreKey));
 
       if (storedTransactions != null) {
         (storedTransactions as List<dynamic>).forEach((tx) {
           _userTransactions.add(Transaction.fromJson(tx));
         });
       } else {
-        prefs.remove(ksharedPrefsStoreKey);
+        prefs.remove(kSharedPrefsStoreKey);
       }
-      print('$ksharedPrefsStoreKey $storedTransactions');
+      print('$kSharedPrefsStoreKey $storedTransactions');
     }
   }
 
   void _storeTransactions() async {
     final SharedPreferences prefs = await _prefs;
     print(_userTransactions);
-    prefs.setString(ksharedPrefsStoreKey, json.encode(_userTransactions));
+    prefs.setString(kSharedPrefsStoreKey, json.encode(_userTransactions));
   }
 
   UnmodifiableListView<Transaction> get userTransactions {
@@ -90,8 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
+              icon: Icon(Icons.settings_display),
+              onPressed: widget.darkModeHandler,
             ),
           ]),
       body: UserTransactions(
