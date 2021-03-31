@@ -1,16 +1,17 @@
 import 'package:expense_tracker/models/transaction.dart';
+import 'package:expense_tracker/widgets/chart.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/widgets/transaction_list.dart';
-import 'package:expense_tracker/widgets/transactions_chart.dart';
 
 class UserTransactions extends StatelessWidget {
   final List<Transaction> userTransactions;
   final Function deleteTransactionHandler;
+  final appBarHeight;
 
-  UserTransactions({
-    @required this.userTransactions,
-    @required this.deleteTransactionHandler,
-  });
+  UserTransactions(
+      {@required this.userTransactions,
+      @required this.deleteTransactionHandler,
+      @required this.appBarHeight});
 
   List<Transaction> get _recentTransactions {
     return userTransactions
@@ -24,11 +25,20 @@ class UserTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableHeight = (MediaQuery.of(context).size.height -
+        appBarHeight -
+        MediaQuery.of(context).padding.top);
+
+    print(MediaQuery.of(context).orientation);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TransactionsChart(
-          recentTransactions: _recentTransactions,
+        Container(
+          // Set the height based on the screen height after reducing the
+          // appbar and the top status/notch height
+          height: availableHeight * 0.3,
+          child: Chart(_recentTransactions),
         ),
         TransactionList(
             userTransactions: userTransactions,

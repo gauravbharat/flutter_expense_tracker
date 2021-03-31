@@ -87,20 +87,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(
-            'Personal Expenses',
+    final appBar = AppBar(
+        title: Text(
+          'Personal Expenses',
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings_display),
+            onPressed: widget.darkModeHandler,
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings_display),
-              onPressed: widget.darkModeHandler,
-            ),
-          ]),
+        ]);
+
+    return Scaffold(
+      appBar: appBar,
       body: UserTransactions(
-          userTransactions: userTransactions,
-          deleteTransactionHandler: _deleteTransaction),
+        userTransactions: userTransactions,
+        deleteTransactionHandler: _deleteTransaction,
+        appBarHeight: appBar.preferredSize.height,
+      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

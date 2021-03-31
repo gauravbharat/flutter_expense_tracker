@@ -1,9 +1,15 @@
 import 'package:expense_tracker/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/home.dart';
 
 void main() {
+  // // Use SystemChrome to set application wide settings for the app
+  // // Force portrait mode for apps
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 
