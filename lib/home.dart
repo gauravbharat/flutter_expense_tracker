@@ -100,8 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
         title: Text(
           'Personal Expenses',
@@ -112,6 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: widget.darkModeHandler,
           ),
         ]);
+
+    // Store mediaquery in variables instead of calling the methods
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     final availableHeight = (MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
@@ -128,8 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
         userTransactions: userTransactions,
         deleteTransactionHandler: _deleteTransaction);
 
-    print(MediaQuery.of(context).orientation);
-
     return Scaffold(
       appBar: appBar,
       body: Column(
@@ -140,7 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Show Chart'),
-                Switch(
+                // Use .adaptive on available widgets, to show platform (ios/android) specific widgets
+                Switch.adaptive(
+                  activeColor: Theme.of(context).accentColor,
                   value: _showChart,
                   onChanged: (value) => setState(() => _showChart = value),
                 ),
