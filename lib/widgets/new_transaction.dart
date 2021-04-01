@@ -65,7 +65,10 @@ class _NewTransactionState extends State<NewTransaction> {
             left: 10,
             right: 10,
             // When a mobile device's keyboard is visible viewInsets.bottom corresponds to the top of the keyboard
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            // bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+
+            // setting 'isScrollControlled: true' in the showModalBottomSheet, lifted up the bottom sheet above the soft keyboard
+            bottom: 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
