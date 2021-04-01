@@ -7,11 +7,16 @@ class UserTransactions extends StatelessWidget {
   final List<Transaction> userTransactions;
   final Function deleteTransactionHandler;
   final appBarHeight;
+  final bool showChart;
+  final Function showChartHandler;
 
-  UserTransactions(
-      {@required this.userTransactions,
-      @required this.deleteTransactionHandler,
-      @required this.appBarHeight});
+  UserTransactions({
+    @required this.userTransactions,
+    @required this.deleteTransactionHandler,
+    @required this.appBarHeight,
+    @required this.showChart,
+    @required this.showChartHandler,
+  });
 
   List<Transaction> get _recentTransactions {
     return userTransactions
@@ -34,15 +39,26 @@ class UserTransactions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          // Set the height based on the screen height after reducing the
-          // appbar and the top status/notch height
-          height: availableHeight * 0.3,
-          child: Chart(_recentTransactions),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Show Chart'),
+            Switch(
+              value: showChart,
+              onChanged: showChartHandler,
+            ),
+          ],
         ),
-        TransactionList(
-            userTransactions: userTransactions,
-            deleteTransactionHandler: deleteTransactionHandler),
+        showChart
+            ? Container(
+                // Set the height based on the screen height after reducing the
+                // appbar and the top status/notch height
+                height: availableHeight * 0.3,
+                child: Chart(_recentTransactions),
+              )
+            : TransactionList(
+                userTransactions: userTransactions,
+                deleteTransactionHandler: deleteTransactionHandler),
       ],
     );
   }

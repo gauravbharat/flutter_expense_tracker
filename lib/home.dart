@@ -20,6 +20,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final List<Transaction> _userTransactions = [];
+  bool _showChart = false;
 
   @override
   void initState() {
@@ -104,6 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
         userTransactions: userTransactions,
         deleteTransactionHandler: _deleteTransaction,
         appBarHeight: appBar.preferredSize.height,
+        showChart: _showChart,
+        showChartHandler: (value) => setState(() => _showChart = value),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
