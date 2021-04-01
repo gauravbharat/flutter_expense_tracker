@@ -1,12 +1,14 @@
-import 'package:expense_tracker/constants.dart';
-import 'package:expense_tracker/widgets/chart.dart';
-import 'package:expense_tracker/widgets/transaction_list.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'dart:collection';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:expense_tracker/constants.dart';
 import 'package:expense_tracker/models/transaction.dart';
+import 'package:expense_tracker/widgets/chart.dart';
+import 'package:expense_tracker/widgets/transaction_list.dart';
 import 'package:expense_tracker/widgets/new_transaction.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -101,8 +103,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
-        title: Text(
-          'Personal Expenses',
+        title: Row(
+          children: [
+            Text(
+              'Personal Expenses',
+            ),
+            if (Platform.isIOS)
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _startAddNewTransaction(context),
+              ),
+          ],
         ),
         actions: [
           IconButton(
@@ -154,11 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
-        // foregroundColor: Theme.of(context).accentColor,
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+              // foregroundColor: Theme.of(context).accentColor,
+            ),
     );
   }
 }
