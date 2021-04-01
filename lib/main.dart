@@ -1,7 +1,11 @@
-import 'package:expense_tracker/constants.dart';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:expense_tracker/constants.dart';
 import 'package:expense_tracker/home.dart';
 
 void main() {
@@ -51,6 +55,48 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    return buildMaterialApp();
+
+    // TODO Work on theme for cupertino and then enable this condition
+    // return Platform.isIOS ? buildCupertinoApp() : buildMaterialApp();
+  }
+
+  CupertinoApp buildCupertinoApp() => CupertinoApp(
+        //     theme:
+        //     _darkMode
+        //         ? CupertinoThemeData().dark().copyWith(
+        //             textTheme: ThemeData.dark().textTheme.copyWith(
+        //                   headline6: kHeadLine6TextTheme,
+        //                 ),
+        //             appBarTheme: AppBarTheme(
+        //               textTheme: ThemeData.dark().textTheme.copyWith(
+        //                     headline6: kHeadLine6AppBarTheme,
+        //                   ),
+        //             ),
+        //           )
+        //         : CupertinoThemeData(
+        //             primaryColor: Colors.purple,
+        //             primaryContrastingColor: Colors.amber,
+        //             fontFamily: 'Quicksand',
+        //             textTheme: CupertinoTextThemeData.textTheme.copyWith(
+        //                   headline6: kHeadLine6TextTheme,
+        //                 ),
+        //             appBarTheme: AppBarTheme(
+        //               textTheme: ThemeData.light().textTheme.copyWith(
+        //                     headline6: kHeadLine6AppBarTheme,
+        //                   ),
+        //             ),
+        //           )
+        // ,
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Expense App',
+        home: MyHomePage(
+          isDarkMode: _darkMode,
+          darkModeHandler: _toggleDarkMode,
+        ),
+      );
+
+  MaterialApp buildMaterialApp() {
     return MaterialApp(
       theme: _darkMode
           ? ThemeData.dark().copyWith(
@@ -79,6 +125,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Expense App',
       home: MyHomePage(
+        isDarkMode: _darkMode,
         darkModeHandler: _toggleDarkMode,
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,8 +14,12 @@ import 'package:expense_tracker/widgets/new_transaction.dart';
 
 class MyHomePage extends StatefulWidget {
   final Function darkModeHandler;
+  final bool isDarkMode;
 
-  MyHomePage({@required this.darkModeHandler});
+  MyHomePage({
+    @required this.isDarkMode,
+    @required this.darkModeHandler,
+  });
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -102,25 +107,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-        title: Row(
-          children: [
-            Text(
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            middle: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Personal Expenses',
+                  style: TextStyle(color: Colors.white),
+                ),
+                GestureDetector(
+                  onTap: () => _startAddNewTransaction(context),
+                  child: Icon(
+                    CupertinoIcons.add,
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(
+                    widget.isDarkMode
+                        ? CupertinoIcons.circle_lefthalf_fill
+                        : CupertinoIcons.circle_righthalf_fill,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  onTap: widget.darkModeHandler,
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text(
               'Personal Expenses',
             ),
-            if (Platform.isIOS)
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startAddNewTransaction(context),
-              ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings_display),
-            onPressed: widget.darkModeHandler,
-          ),
-        ]);
+            actions: [
+                IconButton(
+                  icon: Icon(Icons.settings_display),
+                  onPressed: widget.darkModeHandler,
+                ),
+              ]);
 
     // Store mediaquery in variables instead of calling the methods
     final isLandscape =
@@ -141,16 +171,56 @@ class _MyHomePageState extends State<MyHomePage> {
         userTransactions: userTransactions,
         deleteTransactionHandler: _deleteTransaction);
 
+    return Platform.isIOS
+        ? buildCupertinoPageScaffold(
+            appBar, isLandscape, context, chartContainer, txListWidget)
+        : buildScaffold(
+            appBar, isLandscape, context, chartContainer, txListWidget);
+  }
+
+  CupertinoPageScaffold buildCupertinoPageScaffold(
+      PreferredSizeWidget appBar,
+      bool isLandscape,
+      BuildContext context,
+      Container chartContainer,
+      TransactionList txListWidget) {
+    return CupertinoPageScaffold(
+      navigationBar: appBar,
+      child: buildBody(isLandscape, context, chartContainer, txListWidget),
+    );
+  }
+
+  Scaffold buildScaffold(AppBar appBar, bool isLandscape, BuildContext context,
+      Container chartContainer, TransactionList txListWidget) {
     return Scaffold(
       appBar: appBar,
-      body: Column(
+      body: buildBody(isLandscape, context, chartContainer, txListWidget),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+              // foregroundColor: Theme.of(context).accentColor,
+            ),
+    );
+  }
+
+  SafeArea buildBody(bool isLandscape, BuildContext context,
+      Container chartContainer, TransactionList txListWidget) {
+    // Wrap with SafeArea for notch display!
+    return SafeArea(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (isLandscape)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Show Chart'),
+                Text(
+                  'Show Chart',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
                 // Use .adaptive on available widgets, to show platform (ios/android) specific widgets
                 Switch.adaptive(
                   activeColor: Theme.of(context).accentColor,
@@ -164,14 +234,6 @@ class _MyHomePageState extends State<MyHomePage> {
           if (!isLandscape) txListWidget,
         ],
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
-              // foregroundColor: Theme.of(context).accentColor,
-            ),
     );
   }
 }

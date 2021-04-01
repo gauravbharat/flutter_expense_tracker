@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -73,25 +76,48 @@ class _NewTransactionState extends State<NewTransaction> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              TextField(
-                controller: titleController,
-                maxLength: 25,
-                decoration: InputDecoration(
-                  labelText: 'Title',
+              Platform.isIOS
+                  ? CupertinoTextField(
+                      controller: titleController,
+                      maxLength: 25,
+                      placeholder: 'Title',
+                    )
+                  : TextField(
+                      controller: titleController,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        labelText: 'Title',
+                      ),
+                      // onSubmitted: (_) => _submitData(),
+                    ),
+              if (Platform.isIOS)
+                SizedBox(
+                  height: 5.0,
                 ),
-                // onSubmitted: (_) => _submitData(),
-              ),
-              TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
-                ],
-                controller: amountController,
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                ),
-                // onSubmitted: (_) => _submitData(),
-              ),
+              Platform.isIOS
+                  ? CupertinoTextField(
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'(^\d*\.?\d*)'))
+                      ],
+                      controller: amountController,
+                      placeholder: 'Amount',
+                    )
+                  : TextField(
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'(^\d*\.?\d*)'))
+                      ],
+                      controller: amountController,
+                      decoration: InputDecoration(
+                        labelText: 'Amount',
+                      ),
+                      // onSubmitted: (_) => _submitData(),
+                    ),
               Container(
                 height: 70.0,
                 child: Row(
@@ -100,21 +126,32 @@ class _NewTransactionState extends State<NewTransaction> {
                     Text(_selectedDate == null
                         ? 'No Date Chosen!'
                         : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}'),
-                    TextButton(
-                      onPressed: () {
-                        _presentDatePicker(context);
-                      },
-                      child: Text('Choose Date'),
-                    ),
+                    Platform.isIOS
+                        ? CupertinoButton(
+                            child: Text('Choose Date'),
+                            onPressed: () {
+                              _presentDatePicker(context);
+                            })
+                        : TextButton(
+                            onPressed: () {
+                              _presentDatePicker(context);
+                            },
+                            child: Text('Choose Date'),
+                          ),
                   ],
                 ),
               ),
               Container(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _submitData(context),
-                  child: Text('Add Transaction'),
-                ),
+                child: Platform.isIOS
+                    ? CupertinoButton.filled(
+                        child: Text('Add Transaction'),
+                        onPressed: () => _submitData(context),
+                      )
+                    : ElevatedButton(
+                        onPressed: () => _submitData(context),
+                        child: Text('Add Transaction'),
+                      ),
               )
             ],
           ),
