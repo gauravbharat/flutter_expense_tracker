@@ -60,8 +60,13 @@ class _NewTransactionState extends State<NewTransaction> {
       child: Card(
         elevation: 5.0,
         child: Container(
-          // height: 400,
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            // When a mobile device's keyboard is visible viewInsets.bottom corresponds to the top of the keyboard
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
