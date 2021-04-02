@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import 'package:expense_tracker/widgets/adaptive_raised_button.dart';
+import 'package:expense_tracker/widgets/adaptive_text_button.dart';
+
 class NewTransaction extends StatefulWidget {
   final Function newTxHandler;
 
@@ -126,33 +129,17 @@ class _NewTransactionState extends State<NewTransaction> {
                     Text(_selectedDate == null
                         ? 'No Date Chosen!'
                         : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}'),
-                    Platform.isIOS
-                        ? CupertinoButton(
-                            child: Text('Choose Date'),
-                            onPressed: () {
-                              _presentDatePicker(context);
-                            })
-                        : TextButton(
-                            onPressed: () {
-                              _presentDatePicker(context);
-                            },
-                            child: Text('Choose Date'),
-                          ),
+                    AdaptiveTextButton(
+                      buttonText: 'Choose Date',
+                      datePickerHandler: _presentDatePicker,
+                    ),
                   ],
                 ),
               ),
-              Container(
-                width: double.infinity,
-                child: Platform.isIOS
-                    ? CupertinoButton.filled(
-                        child: Text('Add Transaction'),
-                        onPressed: () => _submitData(context),
-                      )
-                    : ElevatedButton(
-                        onPressed: () => _submitData(context),
-                        child: Text('Add Transaction'),
-                      ),
-              )
+              AdaptiveRaisedButton(
+                buttonText: 'Add Transaction',
+                submitDataHandler: _submitData,
+              ),
             ],
           ),
         ),

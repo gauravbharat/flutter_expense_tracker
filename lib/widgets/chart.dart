@@ -1,11 +1,16 @@
-import 'package:expense_tracker/models/transaction.dart';
-import 'package:expense_tracker/widgets/chart_bar.dart';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:expense_tracker/models/transaction.dart';
+import 'package:expense_tracker/widgets/chart_bar.dart';
+
 class Chart extends StatelessWidget {
   final List<Transaction> recentTransactions;
-  Chart(this.recentTransactions);
+  final bool isDarkMode;
+  Chart(this.recentTransactions, this.isDarkMode);
 
   List<Map<String, Object>> get groupedTransactionValues {
     return List.generate(7, (index) {
@@ -36,6 +41,9 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     // print(groupedTransactionValues);
     return Card(
+      color: Platform.isIOS && isDarkMode
+          ? CupertinoTheme.of(context).primaryColor
+          : Colors.white,
       elevation: 6,
       margin: EdgeInsets.all(20.0),
       child: Padding(
@@ -51,6 +59,7 @@ class Chart extends StatelessWidget {
                 spendingPctOfTotal: maxSpending == 0.0
                     ? 0.0
                     : (data['amount'] as double) / maxSpending,
+                isDarkMode: isDarkMode,
               ),
             );
           }).toList(),

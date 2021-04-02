@@ -1,15 +1,19 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
   final double spendingAmount;
   final double spendingPctOfTotal;
+  final bool isDarkMode;
 
-  ChartBar({
-    @required this.label,
-    @required this.spendingAmount,
-    @required this.spendingPctOfTotal,
-  });
+  ChartBar(
+      {@required this.label,
+      @required this.spendingAmount,
+      @required this.spendingPctOfTotal,
+      @required this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,14 @@ class ChartBar extends StatelessWidget {
           Container(
             height: constraints.maxHeight * 0.15,
             child: FittedBox(
-              child: Text('₹${spendingAmount.toStringAsFixed(0)}'),
+              child: Text(
+                '₹${spendingAmount.toStringAsFixed(0)}',
+                style: TextStyle(
+                  color: Platform.isIOS && isDarkMode
+                      ? CupertinoTheme.of(context).primaryContrastingColor
+                      : Colors.black,
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -43,7 +54,9 @@ class ChartBar extends StatelessWidget {
                   heightFactor: spendingPctOfTotal,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: Platform.isIOS && isDarkMode
+                          ? CupertinoTheme.of(context).scaffoldBackgroundColor
+                          : Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
@@ -57,7 +70,14 @@ class ChartBar extends StatelessWidget {
           Container(
             height: constraints.maxHeight * 0.15,
             child: FittedBox(
-              child: Text(label),
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: Platform.isIOS && isDarkMode
+                      ? CupertinoTheme.of(context).primaryContrastingColor
+                      : Colors.black,
+                ),
+              ),
             ),
           )
         ],

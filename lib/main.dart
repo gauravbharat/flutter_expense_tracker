@@ -55,41 +55,34 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp();
+    // return buildMaterialApp();
 
     // TODO Work on theme for cupertino and then enable this condition
-    // return Platform.isIOS ? buildCupertinoApp() : buildMaterialApp();
+    return Platform.isIOS ? buildCupertinoApp() : buildMaterialApp();
   }
 
   CupertinoApp buildCupertinoApp() => CupertinoApp(
-        //     theme:
-        //     _darkMode
-        //         ? CupertinoThemeData().dark().copyWith(
-        //             textTheme: ThemeData.dark().textTheme.copyWith(
-        //                   headline6: kHeadLine6TextTheme,
-        //                 ),
-        //             appBarTheme: AppBarTheme(
-        //               textTheme: ThemeData.dark().textTheme.copyWith(
-        //                     headline6: kHeadLine6AppBarTheme,
-        //                   ),
-        //             ),
-        //           )
-        //         : CupertinoThemeData(
-        //             primaryColor: Colors.purple,
-        //             primaryContrastingColor: Colors.amber,
-        //             fontFamily: 'Quicksand',
-        //             textTheme: CupertinoTextThemeData.textTheme.copyWith(
-        //                   headline6: kHeadLine6TextTheme,
-        //                 ),
-        //             appBarTheme: AppBarTheme(
-        //               textTheme: ThemeData.light().textTheme.copyWith(
-        //                     headline6: kHeadLine6AppBarTheme,
-        //                   ),
-        //             ),
-        //           )
-        // ,
+        theme: _darkMode
+            ? CupertinoThemeData(
+                brightness: Brightness.dark,
+                primaryColor: Color(0xFF232946),
+                primaryContrastingColor: Color(0xFFEEBBC3),
+                // barBackgroundColor: Color(0xFF232946),
+                scaffoldBackgroundColor: Color(0xFF484C63),
+                // ,
+                // ,
+                // textTheme: CupertinoTextThemeData(),
+                // Colors.black54,
+                // Colors.black54,
+              )
+            : CupertinoThemeData(brightness: Brightness.light),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Expense App',
+        localizationsDelegates: [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
         home: MyHomePage(
           isDarkMode: _darkMode,
           darkModeHandler: _toggleDarkMode,

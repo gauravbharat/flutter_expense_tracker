@@ -1,15 +1,19 @@
-import 'package:expense_tracker/models/transaction.dart';
+import 'dart:io';
+import 'package:expense_tracker/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> userTransactions;
   final Function deleteTransactionHandler;
+  final bool isDarkMode;
 
-  TransactionList({
-    @required this.userTransactions,
-    @required this.deleteTransactionHandler,
-  });
+  TransactionList(
+      {@required this.userTransactions,
+      @required this.deleteTransactionHandler,
+      @required this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,9 @@ class TransactionList extends StatelessWidget {
                 children: [
                   Text(
                     'No Transactions added yet!',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Platform.isIOS
+                        ? kHeadLine6TextTheme
+                        : Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(
                     height: 20.0,
@@ -38,6 +44,9 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
+                  color: Platform.isIOS && isDarkMode
+                      ? CupertinoTheme.of(context).primaryColor
+                      : Colors.white,
                   elevation: 3.0,
                   margin: EdgeInsets.symmetric(
                     vertical: 3.0,
@@ -45,21 +54,39 @@ class TransactionList extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
+                      backgroundColor: Platform.isIOS && isDarkMode
+                          ? CupertinoTheme.of(context).primaryContrastingColor
+                          : Theme.of(context).primaryColor,
+                      foregroundColor: Platform.isIOS && isDarkMode
+                          ? CupertinoTheme.of(context).primaryColor
+                          : Colors.white,
                       radius: 30.0,
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: FittedBox(
                           child: Text(
-                              '₹${userTransactions[index].amount.toStringAsFixed(2)}'),
+                            '₹${userTransactions[index].amount.toStringAsFixed(2)}',
+                          ),
                         ),
                       ),
                     ),
                     title: Text(
                       userTransactions[index].title,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: TextStyle(
+                        color: Platform.isIOS && isDarkMode
+                            ? CupertinoTheme.of(context).primaryContrastingColor
+                            : Colors.black,
+                        fontSize: 18.0,
+                        fontFamily: 'OpenSans',
+                      ),
                     ),
                     subtitle: Text(
                       DateFormat.yMMMd().format(userTransactions[index].date),
+                      style: TextStyle(
+                        color: Platform.isIOS && isDarkMode
+                            ? CupertinoTheme.of(context).primaryContrastingColor
+                            : Colors.black,
+                      ),
                     ),
                     trailing:
                         // Show larger buttons when some real estate is available on larger screens

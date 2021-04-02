@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final PreferredSizeWidget appBar = Platform.isIOS
         ? CupertinoNavigationBar(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: CupertinoTheme.of(context).primaryColor,
             middle: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () => _startAddNewTransaction(context),
                   child: Icon(
                     CupertinoIcons.add,
-                    color: Theme.of(context).accentColor,
+                    color: CupertinoTheme.of(context).primaryContrastingColor,
                   ),
                 ),
               ],
@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     widget.isDarkMode
                         ? CupertinoIcons.circle_lefthalf_fill
                         : CupertinoIcons.circle_righthalf_fill,
-                    color: Theme.of(context).accentColor,
+                    color: CupertinoTheme.of(context).primaryContrastingColor,
                   ),
                   onTap: widget.darkModeHandler,
                 ),
@@ -164,12 +164,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // Set the height based on the screen height after reducing the
       // appbar and the top status/notch height
       height: availableHeight * (isLandscape ? 0.7 : 0.3),
-      child: Chart(_recentTransactions),
+      child: Chart(_recentTransactions, widget.isDarkMode),
     );
 
     final txListWidget = TransactionList(
-        userTransactions: userTransactions,
-        deleteTransactionHandler: _deleteTransaction);
+      userTransactions: userTransactions,
+      deleteTransactionHandler: _deleteTransaction,
+      isDarkMode: widget.isDarkMode,
+    );
 
     return Platform.isIOS
         ? buildCupertinoPageScaffold(
@@ -219,11 +221,15 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Text(
                   'Show Chart',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Platform.isIOS
+                      ? kHeadLine6TextTheme
+                      : Theme.of(context).textTheme.headline6,
                 ),
                 // Use .adaptive on available widgets, to show platform (ios/android) specific widgets
                 Switch.adaptive(
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Platform.isIOS
+                      ? CupertinoTheme.of(context).primaryContrastingColor
+                      : Theme.of(context).accentColor,
                   value: _showChart,
                   onChanged: (value) => setState(() => _showChart = value),
                 ),
