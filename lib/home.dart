@@ -25,7 +25,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    implements WidgetsBindingObserver {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final List<Transaction> _userTransactions = [];
   bool _showChart = false;
@@ -34,6 +35,19 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loadStoredTransactions();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    print('state $state');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   void _loadStoredTransactions() async {
@@ -160,14 +174,14 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top);
 
-    final chartContainer = Container(
+    final Container chartContainer = Container(
       // Set the height based on the screen height after reducing the
       // appbar and the top status/notch height
       height: availableHeight * (isLandscape ? 0.7 : 0.3),
       child: Chart(_recentTransactions, widget.isDarkMode),
     );
 
-    final txListWidget = TransactionList(
+    final TransactionList txListWidget = TransactionList(
       userTransactions: userTransactions,
       deleteTransactionHandler: _deleteTransaction,
       isDarkMode: widget.isDarkMode,
@@ -216,30 +230,96 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Show Chart',
-                  style: Platform.isIOS
-                      ? kHeadLine6TextTheme
-                      : Theme.of(context).textTheme.headline6,
-                ),
-                // Use .adaptive on available widgets, to show platform (ios/android) specific widgets
-                Switch.adaptive(
-                  activeColor: Platform.isIOS
-                      ? CupertinoTheme.of(context).primaryContrastingColor
-                      : Theme.of(context).accentColor,
-                  value: _showChart,
-                  onChanged: (value) => setState(() => _showChart = value),
-                ),
-              ],
-            ),
-          if (isLandscape) _showChart ? chartContainer : txListWidget,
-          if (!isLandscape) chartContainer,
-          if (!isLandscape) txListWidget,
+            ..._buildLandscapeContent(context, chartContainer, txListWidget),
+          if (!isLandscape) ...<Widget>[
+            chartContainer,
+            txListWidget,
+          ],
         ],
       ),
     );
+  }
+
+  List<Widget> _buildLandscapeContent(
+    BuildContext context,
+    Container chartContainer,
+    TransactionList txListWidget,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Show Chart',
+            style: Platform.isIOS
+                ? kHeadLine6TextTheme
+                : Theme.of(context).textTheme.headline6,
+          ),
+          // Use .adaptive on available widgets, to show platform (ios/android) specific widgets
+          Switch.adaptive(
+            activeColor: Platform.isIOS
+                ? CupertinoTheme.of(context).primaryContrastingColor
+                : Theme.of(context).accentColor,
+            value: _showChart,
+            onChanged: (value) => setState(() => _showChart = value),
+          ),
+        ],
+      ),
+      _showChart ? chartContainer : txListWidget
+    ];
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() {
+    // TODO: implement didChangeAccessibilityFeatures
+    print('didChangeAccessibilityFeatures');
+  }
+
+  @override
+  void didChangeLocales(List<Locale> locales) {
+    // TODO: implement didChangeLocales
+    print('didChangeLocales $locales');
+  }
+
+  @override
+  void didChangeMetrics() {
+    // TODO: implement didChangeMetrics
+    print('didChangeMetrics');
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    // TODO: implement didChangePlatformBrightness
+    print('didChangePlatformBrightness');
+  }
+
+  @override
+  void didChangeTextScaleFactor() {
+    // TODO: implement didChangeTextScaleFactor
+    print('didChangeTextScaleFactor');
+  }
+
+  @override
+  void didHaveMemoryPressure() {
+    // TODO: implement didHaveMemoryPressure
+    print('didHaveMemoryPressure');
+  }
+
+  @override
+  Future<bool> didPopRoute() {
+    // TODO: implement didPopRoute
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> didPushRoute(String route) {
+    // TODO: implement didPushRoute
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
+    // TODO: implement didPushRouteInformation
+    throw UnimplementedError();
   }
 }

@@ -55,7 +55,7 @@ class ChartBar extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Platform.isIOS && isDarkMode
-                          ? CupertinoTheme.of(context).scaffoldBackgroundColor
+                          ? CupertinoTheme.of(context).barBackgroundColor
                           : Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(10.0),
                     ),

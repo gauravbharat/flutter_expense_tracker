@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
                 brightness: Brightness.dark,
                 primaryColor: Color(0xFF232946),
                 primaryContrastingColor: Color(0xFFEEBBC3),
-                // barBackgroundColor: Color(0xFF232946),
+                barBackgroundColor: Color(0xFF687EE5),
                 scaffoldBackgroundColor: Color(0xFFB8C1EC),
                 // ,
                 // ,
