@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                 primaryColor: Color(0xFF232946),
                 primaryContrastingColor: Color(0xFFEEBBC3),
                 // barBackgroundColor: Color(0xFF232946),
-                scaffoldBackgroundColor: Color(0xFF484C63),
+                scaffoldBackgroundColor: Color(0xFFB8C1EC),
                 // ,
                 // ,
                 // textTheme: CupertinoTextThemeData(),
